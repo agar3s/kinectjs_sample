@@ -31,9 +31,6 @@
 
       var canvas = $('body').attr('tabindex', 0);
       var keys = {};
-
-
-
       var move = 3;
 
 //animation
@@ -174,7 +171,7 @@ var feyFrames = [
       var imageObj = new Image();
       var blob = new Kinetic.Sprite({
         x: 250,
-        y: 40,
+        y: 100,
         image: imageObj,
         animation: 'idle',
         animations: animations,
@@ -196,10 +193,37 @@ var feyFrames = [
       };
       imageObj.src = 'SFA3PS_FeiLong.PNG';
 
-      
+ var simpleText = new Kinetic.Text({
+        x: stage.getWidth() / 2,
+        y: 15,
+        text: 'Rekkaken!',
+        fontSize: 30,
+        fontFamily: 'Calibri',
+        fill: 'white'
+      });
 
+var specials={37:0,38:0,39:0,40:0};
+var checkSpecials = function(){
+  for(var i = 37; i<41; i++){
+    specials[i]--;
+    if(specials==0){
+      specials[i]=0;
+    }
+  }
+  //check basic hadoken down right
+  if(specials[40]>0&&(specials[40]<specials[39])){
+    delete keys[39];
+    simpleText.show();
+    setTimeout(function(){
+      simpleText.hide();
+    }, 2000);
+    specials[40]=0;
+    specials[39]=0;
+  }
+}
 //listener
       var anim = new Kinetic.Animation(function(frame) {
+        checkSpecials();
         var x = blob.getAttr('x');
         var y = blob.getAttr('y');
         for (var i in keys) {
@@ -216,18 +240,19 @@ var feyFrames = [
               }
             }
             if(i==38){
-              y -= move;
+              //y -= move;
               if(y<-50){
                 y = 400;
               }
             }else if(i==40){
-              y += move;
+              //y += move;
               if(y>400){
                 y = -50;
               }
             }
           }
         blob.setAttrs({'x':x, 'y':y});
+        
       }, layer);
 
       anim.start();
@@ -254,10 +279,13 @@ var feyFrames = [
            (e.which==39 && keys[39])||
            (e.which==40 && keys[40])){
             blob.setAnimation('idle');
-          }
-          delete keys[e.which];
+        }
+        delete keys[e.which];
+        specials[e.which]=10;
       });
 
+      layer.add(simpleText);
+      simpleText.hide();
 
     </script>
   </body>
