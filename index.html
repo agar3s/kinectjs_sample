@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      .container {
+        margin: 0 auto;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="out">
+      <p>Move with the arrow keys</p>
+      <p>and hit a punch with the spacebar</p>
+    </div>
+    <script src="jquery.min.js"></script>
+    <script src="kinetic-v4.5.3.min.js"></script>
+    <script defer="defer">
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 700,
+        height: 400
+      });
+
+      var layer = new Kinetic.Layer();
+
+      var canvas = $('body').attr('tabindex', 0);
+      var keys = {};
+      var move = 3;
+
+//animation
+ancho_caminar = 70;
+alto_sprite = 110;
+var feyFrames = [
+        //idle 0 1 2 3 4 5 6 7 8 9 10
+        {
+          x: 0,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 105,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 210,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 315,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 420,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 525,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 630,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 735,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 840,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 945,
+          y: 265,
+          width: 105,
+          height: alto_sprite
+        },
+        //punch 10 11
+        {
+          x: 10,
+          y: 1800,
+          width: 105,
+          height: alto_sprite
+        }, {
+          x: 105,
+          y: 1800,
+          width: 135,
+          height: alto_sprite
+        },
+        //move 12 13 14 15 16 17 18
+        {
+          x: 0,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*2,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*3,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*4,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*5,
+          y: 735,
+          width: ancho_caminar,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*6,
+          y: 735,
+          width: 55,
+          height: alto_sprite
+        }, {
+          x: ancho_caminar*6+55,
+          y: 735,
+          width: 55,
+          height: alto_sprite
+        }, {
+          x: 0,
+          y: 565,
+          width: 100,
+          height: 120
+        }, {
+          x: 87,
+          y: 562,
+          width: 95,
+          height: 130
+        }, {
+          x: 182,
+          y: 562,
+          width: 95,
+          height: 130
+        }
+        ];
+      var animations = {
+        idle: [feyFrames[0],
+        feyFrames[1],
+        feyFrames[2],
+        feyFrames[3],
+        feyFrames[4],
+        feyFrames[5],
+        feyFrames[6],
+        feyFrames[7],
+        feyFrames[8],
+        feyFrames[9]],
+        punch: [feyFrames[10],
+        feyFrames[11],
+        feyFrames[10]],
+        move:[feyFrames[12],
+        feyFrames[13],
+        feyFrames[14],
+        feyFrames[15],
+        feyFrames[16],
+        feyFrames[17],
+        feyFrames[18],
+        feyFrames[19]
+        ],
+        moveDown:[feyFrames[20],
+        feyFrames[21]],
+        down:[feyFrames[22]
+        ],
+        moveUp:[feyFrames[21],
+        feyFrames[20]],
+      };
+      var imageObj = new Image();
+      var blob = new Kinetic.Sprite({
+        x: 250,
+        y: 100,
+        image: imageObj,
+        animation: 'idle',
+        animations: animations,
+        frameRate: 9,
+        index: 0
+      });
+      imageObj.onload = function() {
+
+        // add the shape to the layer
+        layer.add(blob);
+
+        // add the layer to the stage
+        stage.add(layer);
+
+        // start sprite animation
+        blob.start();
+         $('canvas').css('background-color', '#408080');
+
+      };
+      imageObj.src = 'SFA3PS_FeiLong.PNG';
+
+ var simpleText = new Kinetic.Text({
+        x: stage.getWidth() / 2,
+        y: 15,
+        text: 'Rekkaken!',
+        fontSize: 30,
+        fontFamily: 'Calibri',
+        fill: 'white'
+      });
+
+var specials={37:0,38:0,39:0,40:0};
+var checkSpecials = function(){
+  for(var i = 37; i<41; i++){
+    specials[i]--;
+    if(specials==0){
+      specials[i]=0;
+    }
+  }
+  //check basic hadoken down right
+  if(specials[40]>0&&(specials[40]<specials[39])){
+    delete keys[39];
+    simpleText.show();
+    setTimeout(function(){
+      simpleText.hide();
+    }, 2000);
+    specials[40]=0;
+    specials[39]=0;
+  }
+}
+var downed = false;
+var down = function(){
+  if(!downed){
+    blob.setAnimation('moveDown');
+    blob.afterFrame(1, function() {
+      blob.setAnimation('down');
+    });
+    downed=true;
+  }
+};
+var up = function(){
+  if(downed){
+    blob.setAnimation('moveUp');
+    blob.afterFrame(1, function(){
+      blob.setAnimation('idle');
+    })
+    downed=false;
+  }
+}
+//listener
+      var anim = new Kinetic.Animation(function(frame) {
+        checkSpecials();
+        var x = blob.getAttr('x');
+        var y = blob.getAttr('y');
+        for (var i in keys) {
+            if (!keys.hasOwnProperty(i)) continue;
+            if(i==37){
+              x -= move;
+              if(x<-100){
+                x = 700;
+              }
+            }else if(i==39){
+              x += move;
+              if(x>700){
+                x= -100;
+              }
+            }
+            if(i==38){
+              //y -= move;
+              if(y<-50){
+                y = 400;
+              }
+            }else if(i==40){
+            }
+          }
+        blob.setAttrs({'x':x, 'y':y});
+        
+      }, layer);
+
+      anim.start();
+
+      $(document).keydown(function (e) {
+        if(e.which==32 && !keys[32]){
+          blob.setAnimation('punch');
+          blob.afterFrame(2, function() {
+            blob.setAnimation('idle');
+          });
+        }
+        if((e.which==37 && !keys[37])|| 
+           (e.which==38 && !keys[38])||
+           (e.which==39 && !keys[39])){
+          blob.setAnimation('move');
+        }
+        keys[e.which] = true;
+      });
+
+      $(document).keyup(function (e) {
+        if((e.which==37 && keys[37])|| 
+           (e.which==38 && keys[38])||
+           (e.which==39 && keys[39])){
+            blob.setAnimation('idle');
+        }
+        if(e.which==40){
+          up();
+        }
+        delete keys[e.which];
+        specials[e.which]=10;
+      });
+      $(document).keypress(function(e){
+        if(e.keyCode==40){
+          down();
+        }
+      });
+
+      layer.add(simpleText);
+      simpleText.hide();
+
+    </script>
+  </body>
+</html>
