@@ -142,6 +142,21 @@ var feyFrames = [
           y: 735,
           width: 55,
           height: alto_sprite
+        }, {
+          x: 0,
+          y: 565,
+          width: 100,
+          height: 120
+        }, {
+          x: 87,
+          y: 562,
+          width: 95,
+          height: 130
+        }, {
+          x: 182,
+          y: 562,
+          width: 95,
+          height: 130
         }
         ];
       var animations = {
@@ -166,7 +181,13 @@ var feyFrames = [
         feyFrames[17],
         feyFrames[18],
         feyFrames[19]
-        ]
+        ],
+        moveDown:[feyFrames[20],
+        feyFrames[21]],
+        down:[feyFrames[22]
+        ],
+        moveUp:[feyFrames[21],
+        feyFrames[20]],
       };
       var imageObj = new Image();
       var blob = new Kinetic.Sprite({
@@ -221,6 +242,25 @@ var checkSpecials = function(){
     specials[39]=0;
   }
 }
+var downed = false;
+var down = function(){
+  if(!downed){
+    blob.setAnimation('moveDown');
+    blob.afterFrame(1, function() {
+      blob.setAnimation('down');
+    });
+    downed=true;
+  }
+};
+var up = function(){
+  if(downed){
+    blob.setAnimation('moveUp');
+    blob.afterFrame(1, function(){
+      blob.setAnimation('idle');
+    })
+    downed=false;
+  }
+}
 //listener
       var anim = new Kinetic.Animation(function(frame) {
         checkSpecials();
@@ -245,10 +285,6 @@ var checkSpecials = function(){
                 y = 400;
               }
             }else if(i==40){
-              //y += move;
-              if(y>400){
-                y = -50;
-              }
             }
           }
         blob.setAttrs({'x':x, 'y':y});
@@ -266,8 +302,7 @@ var checkSpecials = function(){
         }
         if((e.which==37 && !keys[37])|| 
            (e.which==38 && !keys[38])||
-           (e.which==39 && !keys[39])||
-           (e.which==40 && !keys[40])){
+           (e.which==39 && !keys[39])){
           blob.setAnimation('move');
         }
         keys[e.which] = true;
@@ -276,12 +311,19 @@ var checkSpecials = function(){
       $(document).keyup(function (e) {
         if((e.which==37 && keys[37])|| 
            (e.which==38 && keys[38])||
-           (e.which==39 && keys[39])||
-           (e.which==40 && keys[40])){
+           (e.which==39 && keys[39])){
             blob.setAnimation('idle');
+        }
+        if(e.which==40){
+          up();
         }
         delete keys[e.which];
         specials[e.which]=10;
+      });
+      $(document).keypress(function(e){
+        if(e.keyCode==40){
+          down();
+        }
       });
 
       layer.add(simpleText);
