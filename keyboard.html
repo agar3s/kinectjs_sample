@@ -1,0 +1,225 @@
+<DOCTYPE HTML!>
+<html>
+  <head>
+    <style>
+      h1 {
+        color:#FFF;
+      }
+      #div1 {
+        background-color: #989800;
+        width:200px;
+        height:300px;
+      }
+      #div2 {
+        background-color: #009393;
+        width:300px;
+        height:200px;
+      }
+      canvas {
+        background-color: #002013;
+        width:400px;
+        height:400px;
+      }
+    </style>
+    <script language="JavaScript" type="text/javascript">
+      // array of table cell ids
+      var tCells = ["downKey", "pressKey", "upKey", "downChar", "pressChar", 
+      "upChar", "keyTarget", "character", "downShift", "pressShift",
+      "upShift", "downAlt", "pressAlt", "upAlt", "downMeta", "pressMeta",
+      "upMeta", "downCtrl", "pressCtrl", "upCtrl"];
+
+      // clear table cells for each key down event
+      function clearCells() {
+          for (var i = 0; i < tCells.length; i++) {
+              document.getElementById(tCells[i]).innerHTML = "&mdash;";
+          }
+      }
+        
+      // display target node's node name
+      function showTarget(evt) {
+          var node = (evt.target) ? evt.target : ((evt.srcElement) ? 
+                     evt.srcElement : null);
+          if (node) {
+              document.getElementById("keyTarget").innerHTML = node.nodeName;
+          }
+      }
+
+      var nbrEvent = 0;
+
+      // decipher key down codes
+      function showDown(evt) {
+        clearCells();
+        evt = (evt) ? evt : ((event) ? event : null);
+        if (evt) {
+          console.log(evt);
+          var text = "";
+          document.getElementById("downKey").innerHTML = evt.keyCode;
+          text += "[<b>keyCode: </b> " + evt.keyCode + "]";
+          if (evt.charCode) {
+            document.getElementById("downChar").innerHTML = evt.charCode;
+            text += "[<b>charCode: </b> " + evt.charCode + "]";
+          }
+          document.getElementById("downShift").innerHTML = 
+              evt.shiftKey? "true" : "false";
+          text += "[<b>shift: </b> " + (evt.shiftKey? "true" : "false") + "]";
+          document.getElementById("downCtrl").innerHTML = 
+              evt.ctrlKey? "true" : "false";
+          text += "[<b>ctrl: </b> " + (evt.ctrlKey? "true" : "false") + "]";
+          document.getElementById("downAlt").innerHTML = 
+              evt.altKey? "true" : "false";
+          text += "[<b>alt: </b> " + (evt.altKey? "true" : "false") + "]";
+          document.getElementById("downMeta").innerHTML = 
+              evt.metaKey? "true" : "false";
+          text += "[<b>meta: </b> " + (evt.metaKey? "true" : "false") + "]";
+          showTarget(evt);
+
+          var p = document.createElement("p");
+          p.innerHTML = "keydown (" + nbrEvent + "): " + text;
+          nbrEvent += 1;
+          document.body.appendChild(p);
+        }
+      }
+        
+      // decipher key press codes
+      function showPress(evt) {
+        evt = (evt) ? evt : ((event) ? event : null);
+        if (evt) {
+          var text = "";
+          document.getElementById("pressKey").innerHTML = evt.keyCode;
+          text += "[<b>keyCode: </b> " + evt.keyCode + "]";
+          
+          if (evt.charCode) {
+            document.getElementById("pressChar").innerHTML = evt.charCode;
+            text += "[<b>charCode: </b> " + evt.charCode + "]";
+          }
+          
+          showTarget(evt);
+          var charCode = (evt.charCode) ? evt.charCode : evt.keyCode;
+          // use String method to convert back to character
+          document.getElementById("character").innerHTML = 
+            String.fromCharCode(charCode);
+          text += "[<b>character: </b> " + String.fromCharCode(charCode) + "]";
+          document.getElementById("pressShift").innerHTML = 
+            evt.shiftKey? "true" : "false";
+          text += "[<b>shift: </b> " + (evt.shiftKey? "true" : "false") + "]";
+          document.getElementById("pressCtrl").innerHTML = 
+            evt.ctrlKey? "true" : "false";
+          text += "[<b>ctrl: </b> " + (evt.ctrlKey? "true" : "false") + "]";
+          document.getElementById("pressAlt").innerHTML = 
+            evt.altKey? "true" : "false";
+          text += "[<b>alt: </b> " + (evt.altKey? "true" : "false") + "]";
+          document.getElementById("pressMeta").innerHTML = 
+            evt.metaKey? "true" : "false";
+          text += "[<b>meta: </b> " + (evt.metaKey? "true" : "false") + "]";
+
+          var p = document.createElement("p");
+          text = "keypress (" + nbrEvent + "): " + text;
+          // for (name in evt) text += "<br> " + name;
+          p.innerHTML = text;
+          nbrEvent += 1;
+          document.body.appendChild(p);
+            //        displayObject(evt);
+        }
+      }
+        
+      // decipher key up codes
+      function showUp(evt) {
+        evt = (evt) ? evt : ((event) ? event : null);
+        if (evt) {
+          var text = "";
+          document.getElementById("upKey").innerHTML = evt.keyCode;
+          text += "[<b>keyCode: </b> " + evt.keyCode + "]";
+          if (evt.charCode) {
+            document.getElementById("upChar").innerHTML = evt.charCode;
+            text += "[<b>charCode: </b> " + evt.charCode + "]";
+          }
+          document.getElementById("upShift").innerHTML = 
+            evt.shiftKey? "true" : "false";
+          text += "[<b>shift: </b> " + (evt.shiftKey? "true" : "false") + "]";
+          document.getElementById("upCtrl").innerHTML = 
+            evt.ctrlKey? "true" : "false";
+          text += "[<b>ctrl: </b> " + (evt.ctrlKey? "true" : "false") + "]";
+          document.getElementById("upAlt").innerHTML = 
+            evt.altKey? "true" : "false";
+          text += "[<b>alt: </b> " + (evt.altKey? "true" : "false") + "]";
+          document.getElementById("upMeta").innerHTML = 
+            evt.metaKey? "true" : "false";
+          text += "[<b>meta: </b> " + (evt.metaKey? "true" : "false") + "]";
+          showTarget(evt);
+
+          var p = document.createElement("p");
+          p.innerHTML = "keyup (" + nbrEvent + "): " + text;
+          nbrEvent += 1;
+          document.body.appendChild(p);
+        }
+      }
+
+      // set page-wide event listeners
+      document.onkeydown = showDown;
+      document.onkeypress = showPress;
+      document.onkeyup = showUp;
+
+
+      function displayObject(obj) {
+        var s = typeof(obj) + "\n";
+        for (var i in obj) {
+          s = s + "obj[" + i + "] + " + obj[i] + "\n";
+        }
+        alert(s);
+      }
+    </script>
+
+  </head>
+  <body>
+    <div id="div1">
+      <h1>keyboard o k ase?</h1>
+    </div>
+    <div id="div2" tabindex="1">
+      <h1>cuentame lo k ases</h1>
+    </div>
+
+    <canvas tabindex="1"></canvas>
+
+    <table border="2" cellpadding="5" cellspacing="5">
+      <caption>Keyboard Event Properties</caption>
+      <tr><th>Data</th><th>keydown</th><th>keypress</th><th>keyup</th></tr>
+      <tr><td>keyCode</td>
+          <td id="downKey">&mdash;</td>
+          <td id="pressKey">&mdash;</td>
+          <td id="upKey">&mdash;</td>
+      </tr>
+      <tr><td>charCode</td>
+          <td id="downChar">&mdash;</td>
+          <td id="pressChar">&mdash;</td>
+          <td id="upChar">&mdash;</td>
+      </tr>
+      <tr><td>Target</td>
+          <td id="keyTarget" colspan="3">&mdash;</td>
+      </tr>
+      <tr><td>Character</td>
+          <td id="character" colspan="3">&mdash;</td>
+      </tr>
+      <tr><td>Shift</td>
+          <td id="downShift">&mdash;</td>
+          <td id="pressShift">&mdash;</td>
+          <td id="upShift">&mdash;</td>
+      </tr>
+      <tr><td>Ctrl</td>
+          <td id="downCtrl">&mdash;</td>
+          <td id="pressCtrl">&mdash;</td>
+          <td id="upCtrl">&mdash;</td>
+      </tr>
+      <tr><td>Alt</td>
+          <td id="downAlt">&mdash;</td>
+          <td id="pressAlt">&mdash;</td>
+          <td id="upAlt">&mdash;</td>
+      </tr>
+      <tr><td>Meta</td>
+          <td id="downMeta">&mdash;</td>
+          <td id="pressMeta">&mdash;</td>
+          <td id="upMeta">&mdash;</td>
+      </tr>
+
+    </table>
+  </body>
+</html>
